@@ -94,8 +94,11 @@ export default function Hero() {
               className="absolute inset-0 block"
             >
               <img
-                src="https://res.cloudinary.com/j9oiujmw/image/upload/v1791738626/glenn-landscape-model.jpg"
+                src="https://res.cloudinary.com/j9oiujmw/image/upload/f_auto,q_auto/v1791738626/glenn-landscape-model.jpg"
                 alt="Glenn RMB"
+                width={1481}
+                height={987}
+                fetchPriority="high"
                 className="absolute inset-0 w-full h-full object-cover object-[60%_20%] md:object-[62%_20%] lg:object-[60%_20%]"
               />
             </a>

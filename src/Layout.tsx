@@ -1,28 +1,54 @@
+import { lazy } from 'react';
 import Navbar from './components/Navbar.tsx';
 import Home from './components/Home.tsx';
-import About from './components/About.tsx';
-import Contact from './components/Contact.tsx';
+import LazySection from './components/LazySection.tsx';
 import { ToastContainer } from 'react-toastify';
-import Skills from './components/Skills.tsx';
-import Projects from './components/Projects.tsx';
-import Experience from './components/Experience.tsx';
-import Testimonials from './components/Testimonials.tsx';
-import Footer from './components/Footer.tsx';
+
+const About = lazy(() => import('./components/About.tsx'));
+const Skills = lazy(() => import('./components/Skills.tsx'));
+const Projects = lazy(() => import('./components/Projects.tsx'));
+const Experience = lazy(() => import('./components/Experience.tsx'));
+const Testimonials = lazy(() => import('./components/Testimonials.tsx'));
+const Contact = lazy(() => import('./components/Contact.tsx'));
+const Footer = lazy(() => import('./components/Footer.tsx'));
 
 export default function Layout() {
   return (
     <>
       <Navbar />
+
       <main>
         <Home />
-        <About />
-        <Skills />
-        <Projects />
-        <Experience />
-        <Testimonials />
-        <Contact />
+
+        <LazySection>
+          <About />
+        </LazySection>
+
+        <LazySection>
+          <Skills />
+        </LazySection>
+
+        <LazySection>
+          <Projects />
+        </LazySection>
+
+        <LazySection>
+          <Experience />
+        </LazySection>
+
+        <LazySection>
+          <Testimonials />
+        </LazySection>
+
+        <LazySection>
+          <Contact />
+        </LazySection>
       </main>
-      <Footer />
+
+      <LazySection>
+        <Footer />
+      </LazySection>
+
       <ToastContainer />
     </>
   );

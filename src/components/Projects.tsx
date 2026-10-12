@@ -1,6 +1,6 @@
 
 import { NavLink } from 'react-router';
-import neonDatabase from '../image/neon-database-and-api-workspace.png';
+import neonDatabase from '../image/neon-database-and-api-workspace.jpg';
 import arrowUpRight from '../image/arrow-up-right.svg';
 
 const specifications = [
@@ -88,7 +88,7 @@ export default function Projects() {
                 <img
                   src={neonDatabase}
                   alt="Neon Database"
-                  className="w-full h-auto aspect-[4/3] object-cover sm:aspect-[16/10] md:aspect-[4/3]"
+                  className="w-full h-auto aspect-4/3 object-cover sm:aspect-16/10 md:aspect-4/3"
                 />
               </div>
 

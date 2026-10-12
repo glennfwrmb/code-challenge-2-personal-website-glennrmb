@@ -33,7 +33,7 @@ export default function About() {
                 aria-label="Open watermarked portrait of Glenn RMB in a new tab"
               >
                 <img
-                  src="https://res.cloudinary.com/j9oiujmw/image/upload/v1791738626/glenn-rmb.jpg"
+                 src="https://res.cloudinary.com/j9oiujmw/image/upload/f_auto,q_auto/v1791738626/glenn-rmb.jpg"
                   alt="Glenn Rmb"
                   className="w-full max-w-70 h-auto object-contain object-top"
                 />
@@ -159,7 +159,7 @@ export default function About() {
               aria-label="Open watermarked portrait of Glenn RMB in a new tab"
             >
               <img
-                src="https://res.cloudinary.com/j9oiujmw/image/upload/v1791738626/glenn-rmb.jpg"
+              src="https://res.cloudinary.com/j9oiujmw/image/upload/f_auto,q_auto/v1791738626/glenn-rmb.jpg"
                 alt="Glenn Rmb"
                 className="w-full max-w-90 h-auto object-contain object-top lg:max-w-[440.67px]"
               />
