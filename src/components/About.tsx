@@ -1,5 +1,3 @@
-import glennRMB from '../image/glenn-rmb.jpg';
-
 export default function About() {
   return (
     <section
@@ -28,11 +26,18 @@ export default function About() {
 
             {/* LEFT COLUMN - PORTRAIT MOBILE */}
             <div className="flex items-start justify-center w-full h-fit md:hidden">
-              <img
-                src={glennRMB}
-                alt="Glenn Rmb"
-                className="w-full max-w-70 h-auto object-contain object-top"
-              />
+              <a
+                href="https://res.cloudinary.com/j9oiujmw/image/upload/l_text:Arial_36_bold:GLENN%20RMB,co_white,o_50/a_330/c_lpad,w_400,h_160/fl_layer_apply,fl_tiled,x_80,y_80/v1791738626/glenn-rmb.jpg"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open watermarked portrait of Glenn RMB in a new tab"
+              >
+                <img
+                  src="https://res.cloudinary.com/j9oiujmw/image/upload/v1791738626/glenn-rmb.jpg"
+                  alt="Glenn Rmb"
+                  className="w-full max-w-70 h-auto object-contain object-top"
+                />
+              </a>
             </div>
 
             {/* BIO */}
@@ -145,14 +150,20 @@ export default function About() {
               </blockquote>
             </div>
           </div>
-
           {/* LEFT COLUMN - PORTRAIT TABLET & DESKTOP */}
           <div className="hidden md:col-start-1 md:col-span-5 md:row-start-1 md:flex md:items-start md:justify-center md:w-full md:h-fit md:-translate-y-5">
-            <img
-              src={glennRMB}
-              alt="Glenn Rmb"
-              className="w-full max-w-90 h-auto object-contain object-top lg:max-w-[440.67px]"
-            />
+            <a
+              href="https://res.cloudinary.com/j9oiujmw/image/upload/l_text:Arial_36_bold:GLENN%20RMB,co_white,o_50/a_330/c_lpad,w_400,h_160/fl_layer_apply,fl_tiled,x_80,y_80/v1791738626/glenn-rmb.jpg"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open watermarked portrait of Glenn RMB in a new tab"
+            >
+              <img
+                src="https://res.cloudinary.com/j9oiujmw/image/upload/v1791738626/glenn-rmb.jpg"
+                alt="Glenn Rmb"
+                className="w-full max-w-90 h-auto object-contain object-top lg:max-w-[440.67px]"
+              />
+            </a>
           </div>
         </div>
       </div>

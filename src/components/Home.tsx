@@ -1,6 +1,4 @@
-
 import { NavLink } from 'react-router';
-import glennLandscape from '../image/glenn-landscape-model.jpg';
 import arrowUpRight from '../image/arrow-up-right.svg';
 import { FaGithub, FaLinkedin } from 'react-icons/fa';
 
@@ -32,13 +30,13 @@ export default function Hero() {
   return (
     <section
       id="hero"
-      className="relative w-full min-h-[600px] md:min-h-[100svh] lg:min-h-234 bg-[#171A24]"
+      className="relative w-full min-h-150 md:min-h-svh lg:min-h-234 bg-[#171A24]"
     >
       {/* ATMOSPHERIC SUBTLE RADIAL GLOW */}
       <div className="absolute left-1/2 -translate-x-1/2 md:left-70 md:translate-x-0 lg:left-90 top-0 w-100 md:w-125 lg:w-150 h-100 md:h-125 lg:h-150 bg-[radial-gradient(circle,#E85D2A1F_0%,#E85D2A00_70%)] z-0" />
 
       {/* BACKGROUND PORTRAIT LAYER */}
-      <div className="absolute inset-0 w-full h-[600px] md:h-[100svh] lg:h-234">
+      <div className="absolute inset-0 w-full h-150 md:h-svh lg:h-234">
         {/* GRADIENT 1 */}
         <div className="absolute inset-0 mix-blend-multiply bg-[radial-gradient(circle,#090C1300_35%,#090C1366_80%)] z-40" />
 
@@ -48,7 +46,7 @@ export default function Hero() {
         {/* MASK GROUP */}
         <div className="absolute inset-0 z-20">
           <div
-            className="flex flex-col items-start justify-center w-full h-[600px] md:h-[100svh] lg:h-234 absolute inset-0"
+            className="flex flex-col items-start justify-center w-full h-150 md:h-svh lg:h-234 absolute inset-0"
             style={{
               WebkitMaskImage: `
                 linear-gradient(
@@ -88,11 +86,19 @@ export default function Hero() {
               `,
             }}
           >
-            <img
-              src={glennLandscape}
-              alt="Glenn RMB"
-              className="absolute inset-0 w-full h-full object-cover object-[60%_20%] md:object-[62%_20%] lg:object-[60%_20%]"
-            />
+            <a
+              href="https://res.cloudinary.com/j9oiujmw/image/upload/l_text:Arial_32_bold:GLENN%20RMB,co_white,o_45/a_330/c_lpad,w_500,h_200/fl_layer_apply,fl_tiled/v1791738626/glenn-landscape-model.jpg"
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Open watermarked portrait of Glenn RMB in a new tab"
+              className="absolute inset-0 block"
+            >
+              <img
+                src="https://res.cloudinary.com/j9oiujmw/image/upload/v1791738626/glenn-landscape-model.jpg"
+                alt="Glenn RMB"
+                className="absolute inset-0 w-full h-full object-cover object-[60%_20%] md:object-[62%_20%] lg:object-[60%_20%]"
+              />
+            </a>
           </div>
         </div>
 
@@ -101,7 +107,7 @@ export default function Hero() {
       </div>
 
       {/* HERO CONTENT */}
-      <div className="relative z-50 flex flex-col items-start justify-center w-full min-h-[600px] px-5 py-6 md:min-h-[100svh] md:px-10 md:py-12 lg:min-h-234 lg:px-20 lg:py-16">
+      <div className="relative z-50 flex flex-col items-start justify-center w-full min-h-150 px-5 py-6 md:min-h-svh md:px-10 md:py-12 lg:min-h-234 lg:px-20 lg:py-16">
         <div className="flex flex-col items-start w-full max-w-3xl gap-3 sm:gap-5 md:gap-6 lg:gap-6">
           <div className="flex items-center w-full gap-3">
             <div className="w-6 md:w-7 lg:w-8 h-0.5 bg-[#E85D2A]" />

@@ -1,0 +1,15 @@
+
+{
+  "rewrites": [
+    {
+      "source": "/verify/:token",
+      "destination": "/api/verify?token=:token"
+    }
+  ],
+  "crons": [
+    {
+      "path": "/api/cleanup-verifications",
+      "schedule": "0 2 * * *"
+    }
+  ]
+}
