@@ -1,3 +1,9 @@
+const portraitPreview =
+  'https://res.cloudinary.com/j9oiujmw/image/upload/f_auto,q_auto/v1791738626/glenn-rmb.jpg';
+
+const portraitFull =
+  'https://res.cloudinary.com/j9oiujmw/image/upload/l_text:Arial_36_bold:GLENN%20RMB,co_white,o_50/a_330/c_lpad,w_400,h_160/fl_layer_apply,fl_tiled,x_80,y_80/v1791738626/glenn-rmb.jpg';
+
 export default function About() {
   return (
     <section
@@ -27,16 +33,25 @@ export default function About() {
             {/* LEFT COLUMN - PORTRAIT MOBILE */}
             <div className="flex items-start justify-center w-full h-fit md:hidden">
               <a
-                href="https://res.cloudinary.com/j9oiujmw/image/upload/l_text:Arial_36_bold:GLENN%20RMB,co_white,o_50/a_330/c_lpad,w_400,h_160/fl_layer_apply,fl_tiled,x_80,y_80/v1791738626/glenn-rmb.jpg"
+                href={portraitFull}
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Open watermarked portrait of Glenn RMB in a new tab"
+                className="relative block w-full max-w-70"
               >
                 <img
-                 src="https://res.cloudinary.com/j9oiujmw/image/upload/f_auto,q_auto/v1791738626/glenn-rmb.jpg"
+                  src={portraitPreview}
                   alt="Glenn Rmb"
-                  className="w-full max-w-70 h-auto object-contain object-top"
+                  className="w-full h-auto object-contain object-top"
                 />
+
+                {/* SIGNATURE ON CHEST */}
+                <span
+                  className="absolute bottom-[18%] right-[12%] whitespace-nowrap font-signature text-[30px] text-[#D9D9D9] opacity-75 pointer-events-none"
+                  style={{ transform: 'rotate(-8deg)' }}
+                >
+                  Glenn RMB
+                </span>
               </a>
             </div>
 
@@ -136,6 +151,7 @@ export default function About() {
 
             {/* DESIGN PHILOSOPHY */}
             <div className="flex flex-col items-start w-full h-fit gap-y-3 pt-5 border-t border-white/8">
+              {/* SECTION LABEL */}
               <div className="flex flex-col items-start w-full h-fit">
                 <span className="w-full h-fit font-jetbrains font-medium text-[10px] text-[#A5A7B0] leading-4 tracking-[0.6px]">
                   / DESIGN_PHILOSOPHY
@@ -150,19 +166,29 @@ export default function About() {
               </blockquote>
             </div>
           </div>
+
           {/* LEFT COLUMN - PORTRAIT TABLET & DESKTOP */}
           <div className="hidden md:col-start-1 md:col-span-5 md:row-start-1 md:flex md:items-start md:justify-center md:w-full md:h-fit md:-translate-y-5">
             <a
-              href="https://res.cloudinary.com/j9oiujmw/image/upload/l_text:Arial_36_bold:GLENN%20RMB,co_white,o_50/a_330/c_lpad,w_400,h_160/fl_layer_apply,fl_tiled,x_80,y_80/v1791738626/glenn-rmb.jpg"
+              href={portraitFull}
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Open watermarked portrait of Glenn RMB in a new tab"
+              className="relative block w-full max-w-90 lg:max-w-[440.67px]"
             >
               <img
-              src="https://res.cloudinary.com/j9oiujmw/image/upload/f_auto,q_auto/v1791738626/glenn-rmb.jpg"
+                src={portraitPreview}
                 alt="Glenn Rmb"
-                className="w-full max-w-90 h-auto object-contain object-top lg:max-w-[440.67px]"
+                className="w-full h-auto object-contain object-top"
               />
+
+              {/* SIGNATURE ON CHEST */}
+              <span
+                className="absolute bottom-[35%] right-[20%] whitespace-nowrap font-signature text-[22px] lg:text-[28px] text-[#D9D9D9] opacity-25 pointer-events-none"
+                style={{ transform: 'rotate(-8deg)' }}
+              >
+                Glenn RMB
+              </span>
             </a>
           </div>
         </div>
