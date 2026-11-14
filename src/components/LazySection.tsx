@@ -1,3 +1,4 @@
+
 import { Suspense, useEffect, useRef, useState } from 'react';
 
 type LazySectionProps = {
@@ -17,6 +18,11 @@ export default function LazySection({
 
     if (!element) return;
 
+    if (!('IntersectionObserver' in window)) {
+      setIsVisible(true);
+      return;
+    }
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -24,7 +30,10 @@ export default function LazySection({
           observer.disconnect();
         }
       },
-      { rootMargin: '300px 0px' },
+      {
+        rootMargin: '300px 0px',
+        threshold: 0,
+      },
     );
 
     observer.observe(element);
@@ -33,9 +42,14 @@ export default function LazySection({
   }, []);
 
   return (
-    <div ref={sectionRef}>
+    <div
+      ref={sectionRef}
+      className={isVisible ? 'w-full' : 'w-full min-h-[200px]'}
+    >
       {isVisible && (
-        <Suspense fallback={fallback}>{children}</Suspense>
+        <Suspense fallback={fallback}>
+          {children}
+        </Suspense>
       )}
     </div>
   );

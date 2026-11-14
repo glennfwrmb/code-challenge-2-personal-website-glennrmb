@@ -47,7 +47,7 @@ export default function About() {
 
                 {/* SIGNATURE ON CHEST */}
                 <span
-                  className="absolute bottom-[18%] right-[12%] whitespace-nowrap font-signature text-[30px] text-[#D9D9D9] opacity-75 pointer-events-none"
+                  className="absolute bottom-[35%] right-[20%] whitespace-nowrap font-signature text-[22px] text-[#D9D9D9] opacity-25 pointer-events-none"
                   style={{ transform: 'rotate(-8deg)' }}
                 >
                   Glenn RMB

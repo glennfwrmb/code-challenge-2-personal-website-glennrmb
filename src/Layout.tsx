@@ -1,3 +1,4 @@
+
 import { lazy } from 'react';
 import Navbar from './components/Navbar.tsx';
 import Home from './components/Home.tsx';
