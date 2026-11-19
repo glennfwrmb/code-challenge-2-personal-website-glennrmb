@@ -2,9 +2,11 @@ const technologies = [
   'JavaScript',
   'TypeScript',
   'React',
+  'Next.js',
   'Node.js',
   'Express.js',
   'PostgreSQL',
+  'Prisma ORM',
 ];
 
 export default function Experience() {
@@ -36,7 +38,7 @@ export default function Experience() {
           {/* RESUME CHRONOLOGY */}
           <div className="flex flex-col items-start w-full h-fit border-t border-white/8">
             {/* CONTAINER */}
-           <div className="grid grid-cols-1 w-full h-fit gap-y-5 pt-8 pb-6 sm:gap-y-6 sm:pt-10 sm:pb-8 md:grid-cols-12 md:gap-x-3 md:gap-y-3 md:py-10">
+            <div className="grid grid-cols-1 w-full h-fit gap-y-5 pt-8 pb-6 sm:gap-y-6 sm:pt-10 sm:pb-8 md:grid-cols-12 md:gap-x-3 md:gap-y-3 md:py-10">
               {/* DATE — LEFT */}
               <div className="flex items-center w-full h-fit gap-x-3 md:col-start-1 md:col-span-3 md:row-start-1 md:row-span-1">
                 {/* BACKGROUND + SHADOW */}
@@ -76,7 +78,7 @@ export default function Experience() {
                   {/* PROGRAM */}
                   <div className="flex flex-col items-start w-fit h-fit px-2 py-0.5 bg-[#1D2130] border-t border-white/8">
                     <span className="w-fit h-fit font-jetbrains font-normal text-xs text-[#A5A7B0] leading-3.75 tracking-[0.5px]">
-                      FULL-STACK SOFTWARE DEVELOPMENT
+                      JOB CONNECTOR AI FULL STACK SOFTWARE DEVELOPMENT
                     </span>
                   </div>
 
@@ -98,12 +100,13 @@ export default function Experience() {
                 {/* DESCRIPTION */}
                 <div className="flex flex-col items-start w-full max-w-3xl h-fit">
                   <p className="w-full h-fit font-space font-light text-sm text-[#A5A7B0] leading-[22.8px] tracking-[-0.16px]">
-                    Currently undergoing an intensive Full-Stack Software
-                    Development program at Purwadhika Digital Technology School,
-                    focusing on building practical skills in programming
-                    fundamentals, frontend development, backend development,
-                    REST APIs, databases, and full-stack application
-                    development.
+                    Currently pursuing the Job Connector AI Full Stack Software
+                    Development program at Purwadhika Digital Technology School.
+                    Successfully completed the Mini Project and Selection Test
+                    stages and qualified for the Final Project Bootcamp. Gaining
+                    hands-on experience in frontend development, backend
+                    development, RESTful APIs, and database management through
+                    individual and collaborative projects.
                   </p>
                 </div>
 

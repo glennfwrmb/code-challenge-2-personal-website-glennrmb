@@ -1,4 +1,3 @@
-
 const portraitPreview =
   'https://res.cloudinary.com/j9oiujmw/image/upload/v1794670774/glenn-rmb.jpg';
 
@@ -63,9 +62,10 @@ export default function About() {
               {/* PARAGRAPH 2 */}
               <div className="flex flex-col items-start w-full h-fit">
                 <p className="w-full h-fit font-space font-light text-sm text-[#A5A7B0] leading-6 tracking-[-0.16px] md:text-sm lg:text-sm">
-                  I am currently building my skills across frontend and backend
-                  development, working with modern technologies to understand
-                  how complete web applications are designed and built.
+                  I am continuously developing my frontend and backend skills
+                  through hands-on projects, focusing on responsive interfaces,
+                  RESTful APIs, database management, and building functional web
+                  applications.
                 </p>
               </div>
             </div>
@@ -88,6 +88,7 @@ export default function About() {
                   </h3>
 
                   <div className="flex flex-col items-start w-full h-fit gap-y-2">
+                    {/* REACT */}
                     <div className="flex items-center w-full h-fit gap-x-2">
                       <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
                       <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
@@ -95,6 +96,15 @@ export default function About() {
                       </span>
                     </div>
 
+                    {/* NEXT.JS */}
+                    <div className="flex items-center w-full h-fit gap-x-2">
+                      <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
+                      <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
+                        Next.js
+                      </span>
+                    </div>
+
+                    {/* TYPESCRIPT */}
                     <div className="flex items-center w-full h-fit gap-x-2">
                       <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
                       <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
@@ -102,6 +112,7 @@ export default function About() {
                       </span>
                     </div>
 
+                    {/* TAILWIND CSS */}
                     <div className="flex items-center w-full h-fit gap-x-2">
                       <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
                       <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
@@ -118,13 +129,15 @@ export default function About() {
                   </h3>
 
                   <div className="flex flex-col items-start w-full h-fit gap-y-2">
+                    {/* NODE.JS / EXPRESS.JS */}
                     <div className="flex items-center w-full h-fit gap-x-2">
                       <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
                       <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
-                        Node.js / Express
+                        Node.js / Express.js
                       </span>
                     </div>
 
+                    {/* POSTGRESQL */}
                     <div className="flex items-center w-full h-fit gap-x-2">
                       <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
                       <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
@@ -132,6 +145,23 @@ export default function About() {
                       </span>
                     </div>
 
+                    {/* PRISMA ORM */}
+                    <div className="flex items-center w-full h-fit gap-x-2">
+                      <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
+                      <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
+                        Prisma ORM
+                      </span>
+                    </div>
+
+                    {/* SUPABASE */}
+                    <div className="flex items-center w-full h-fit gap-x-2">
+                      <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
+                      <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
+                        Supabase
+                      </span>
+                    </div>
+
+                    {/* REST APIS */}
                     <div className="flex items-center w-full h-fit gap-x-2">
                       <span className="w-1.5 h-1.5 shrink-0 rounded-full bg-[#E85D2A]" />
                       <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5 tracking-[-0.16px]">
@@ -162,7 +192,7 @@ export default function About() {
           </div>
 
           {/* LEFT COLUMN - PORTRAIT TABLET & DESKTOP */}
-          <div className="hidden md:col-start-1 md:col-span-5 md:row-start-1 md:flex md:items-start md:justify-center md:w-full md:h-fit md:-translate-y-5">
+          <div className="hidden md:col-start-1 md:col-span-5 md:row-start-1 md:flex md:items-start md:justify-center md:w-full md:h-fit md:-translate-y">
             <a
               href={portraitFull}
               target="_blank"

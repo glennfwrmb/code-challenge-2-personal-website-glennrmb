@@ -1,7 +1,11 @@
-
 import { NavLink } from 'react-router';
+
 import neonDatabase from '../image/neon-database-and-api-workspace.jpg';
+import jovlenDashboard from '../image/jovlen-organizer-dashboard-preview.png.png';
+import jovlenReferral from '../image/jovlen-referral-points-preview.png.png';
 import arrowUpRight from '../image/arrow-up-right.svg';
+
+// PROJECT 01 — WAREHOUSE MANAGEMENT SYSTEM
 
 const specifications = [
   {
@@ -13,7 +17,9 @@ const specifications = [
     ),
   },
   {
-    content: <>· Products table tracking pricing, stock, zone & restock dates</>,
+    content: (
+      <>· Products table tracking pricing, stock, zone & restock dates</>
+    ),
   },
   {
     content: <>· SQL queries filtering products by stock and category</>,
@@ -60,6 +66,19 @@ const techStack = [
   'Postman',
 ];
 
+// PROJECT 02 — JÖVLEN EVENT TICKETING PLATFORM
+
+const jovlenTechStack = [
+  'Next.js',
+  'React',
+  'TypeScript',
+  'Tailwind CSS',
+  'Express.js',
+  'Prisma ORM',
+  'PostgreSQL',
+  'Postman',
+];
+
 export default function Projects() {
   return (
     <section
@@ -80,7 +99,10 @@ export default function Projects() {
             </h2>
           </div>
 
-          {/* PROJECT ARTICLE */}
+          {/* ===================================================== */}
+          {/* PROJECT 01 — WAREHOUSE MANAGEMENT SYSTEM */}
+          {/* ===================================================== */}
+
           <div className="grid grid-cols-1 w-full h-fit gap-y-8 md:grid-cols-2 md:gap-x-5 md:gap-y-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-16 xl:gap-x-20">
             {/* PROJECT IMAGE */}
             <div className="flex flex-col items-start w-full h-fit gap-3 md:col-start-2 md:col-span-1 md:row-start-1 lg:col-start-7 lg:col-span-6">
@@ -130,17 +152,17 @@ export default function Projects() {
 
               {/* PROJECT SUMMARY */}
               <p className="w-full h-fit font-space font-light text-base text-[#F5F3EE] leading-6 tracking-[-0.16px]">
-                A warehouse management system built with PostgreSQL,
-                Express.js, TypeScript, and REST API.
+                A warehouse management system built with PostgreSQL, Express.js,
+                TypeScript, and REST API.
               </p>
 
               {/* PROJECT DESCRIPTION */}
               <p className="w-full h-fit font-space font-light text-sm text-[#A5A7B0] leading-5 tracking-[-0.16px]">
-                I designed and implemented a warehouse database system to
-                manage products, stock quantities, minimum stock levels,
-                suppliers, warehouse zones, product status, and restock dates.
-                The project also includes a REST API for creating and
-                retrieving product data.
+                I designed and implemented a warehouse database system to manage
+                products, stock quantities, minimum stock levels, suppliers,
+                warehouse zones, product status, and restock dates. The project
+                also includes a REST API for creating and retrieving product
+                data.
               </p>
 
               {/* PROJECT PIPELINE */}
@@ -212,6 +234,200 @@ export default function Projects() {
                       className="relative w-4 h-4 -translate-y-px"
                     />
                   </NavLink>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ===================================================== */}
+          {/* PROJECT 02 — JÖVLEN EVENT TICKETING PLATFORM */}
+          {/* ===================================================== */}
+
+          <div className="grid grid-cols-1 w-full h-fit gap-y-8 pt-12 border-t border-white/8 md:grid-cols-2 md:gap-x-5 md:gap-y-10 lg:grid-cols-12 lg:gap-x-12 lg:gap-y-16 lg:pt-20 xl:gap-x-20">
+            {/* PROJECT DETAILS — LEFT */}
+            <div className="flex flex-col items-start w-full h-fit gap-y-6 md:col-start-1 md:col-span-1 lg:col-start-1 lg:col-span-5">
+              {/* PROJECT TITLE */}
+              <div className="flex flex-col items-start w-full h-fit gap-y-2">
+                <div className="flex flex-wrap items-center w-full h-fit gap-x-2 gap-y-2">
+                  <span className="w-fit h-fit font-jetbrains font-semibold text-xs text-[#E85D2A] leading-4 tracking-2.4">
+                    PROJECT 02 // FULL-STACK WEB DEVELOPMENT
+                  </span>
+
+                  <span className="font-jetbrains font-normal text-white/20 leading-4">
+                    |
+                  </span>
+
+                  <div className="flex flex-col items-start w-fit h-fit px-2 py-0.5 bg-[#E85D2A]/10 border-t border-[#E85D2A]/30 rounded-xs">
+                    <span className="w-fit h-fit font-jetbrains font-normal text-[10px] text-[#E85D2A] leading-3.75 tracking-0.5">
+                      TEAM PROJECT · FEATURE 2
+                    </span>
+                  </div>
+                </div>
+
+                <h3 className="w-full h-fit pt-1 font-bodoni text-4xl text-[#F5F3EE] leading-[1.05] tracking-[-0.16px] [font-variation-settings:'opsz'_48] sm:text-5xl sm:leading-12">
+                  JÖVLEN — EVENT TICKETING PLATFORM
+                </h3>
+              </div>
+
+              {/* PROJECT SUMMARY */}
+              <p className="w-full h-fit font-space font-light text-base text-[#F5F3EE] leading-6 tracking-[-0.16px]">
+                A collaborative event ticketing platform designed for customers
+                and event organizers.
+              </p>
+
+              {/* PROJECT DESCRIPTION */}
+              <p className="w-full h-fit font-space font-light text-sm text-[#A5A7B0] leading-5 tracking-[-0.16px]">
+                Developed as a team project, Jövlen is an event ticketing
+                platform featuring customer account management, referral
+                rewards, and tools for event organizers.
+              </p>
+
+              {/* MY CONTRIBUTION */}
+              <div className="flex flex-col items-start w-full h-fit gap-y-2 px-4 py-4 bg-[#1D2130] border-l-2 border-[#E85D2A] rounded-xs">
+                <span className="w-full h-fit font-jetbrains font-semibold text-xs text-[#E85D2A] leading-4 tracking-1.1">
+                  MY CONTRIBUTION — FEATURE 2
+                </span>
+
+                <p className="w-full h-fit font-space font-light text-sm text-[#A5A7B0] leading-5 tracking-[-0.16px]">
+                  I was responsible for developing Feature 2, focusing on
+                  authentication, referral rewards, customer profile management,
+                  and organizer dashboard functionality.
+                </p>
+              </div>
+
+              {/* FEATURE HIGHLIGHTS */}
+              <div className="flex flex-col items-start w-full h-fit gap-y-3 pt-5 border-t border-white/8">
+                <span className="w-full h-fit font-jetbrains font-semibold text-xs text-[#E85D2A] leading-4 tracking-1.1">
+                  FEATURE 2 HIGHLIGHTS
+                </span>
+
+                <div className="grid grid-cols-1 w-full h-fit gap-x-4 gap-y-2 sm:grid-cols-2">
+                  {[
+                    '· Customer & organizer authentication',
+                    '· Referral codes and reward points',
+                    '· Referral point expiration tracking',
+                    '· Customer profile management',
+                    '· Password change and reset flows',
+                    '· Organizer dashboard overview',
+                    '· Ticket sales and revenue statistics',
+                    '· Day, month, and year chart filters',
+                  ].map((feature) => (
+                    <p
+                      key={feature}
+                      className="w-full h-fit font-jetbrains font-normal text-[11px] text-[#A5A7B0] leading-[15.1px] tracking-[-0.16px]"
+                    >
+                      {feature}
+                    </p>
+                  ))}
+                </div>
+              </div>
+
+              {/* TECH STACK */}
+              <div className="flex flex-col items-start w-full h-fit gap-y-2 pt-2">
+                <span className="w-full h-fit font-jetbrains font-normal text-xs text-[#A5A7B0] leading-3.75 tracking-[1px]">
+                  TECH STACK
+                </span>
+
+                <div className="flex flex-wrap items-start w-full h-fit gap-x-2 gap-y-2">
+                  {jovlenTechStack.map((tech) => (
+                    <div
+                      key={tech}
+                      className="flex flex-col items-start w-fit h-6.75 px-3 py-1 bg-[#1D2130] border-t border-white/8"
+                    >
+                      <span className="w-fit h-fit font-jetbrains font-normal text-xs text-[#F5F3EE] leading-[16.5px] tracking-[-0.16px]">
+                        {tech}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+
+              {/* PROJECT STATUS */}
+              <div className="flex items-start w-full h-fit gap-x-2 px-3 py-2.5 bg-[#1D2130] border-t border-white/8 rounded-xs">
+                <span className="w-1.5 h-1.5 mt-1.5 bg-[#E85D2A] rounded-full shrink-0" />
+
+                <span className="w-full h-fit font-jetbrains font-normal text-xs text-[#E85D2A] leading-4 tracking-0.55">
+                  TEAM MINI PROJECT // FEATURE 2 DEVELOPMENT
+                </span>
+              </div>
+
+              {/* VIEW PROJECT — ENABLE WHEN URL IS AVAILABLE */}
+              <div className="flex items-center w-full h-fit pt-2 sm:pt-4">
+                <div
+                  aria-disabled="true"
+                  className="relative inline-flex items-center justify-center w-fit h-fit gap-x-2.5 px-7 py-3.5 bg-[#E85D2A]/50 cursor-not-allowed"
+                >
+                  <span className="relative font-jetbrains font-semibold text-xs text-white leading-4 tracking-1.2">
+                    VIEW PROJECT
+                  </span>
+
+                  <img
+                    src={arrowUpRight}
+                    alt=""
+                    aria-hidden="true"
+                    className="relative w-4 h-4 -translate-y-px"
+                  />
+                </div>
+              </div>
+            </div>
+
+            {/* PROJECT IMAGES — RIGHT */}
+            <div className="flex flex-col items-start w-full h-fit gap-y-6 md:col-start-2 md:col-span-1 lg:col-start-6 lg:col-span-7">
+              {/* ORGANIZER DASHBOARD */}
+              <div className="flex flex-col items-start w-full h-fit gap-y-3">
+                <div className="flex flex-col items-start w-full h-fit overflow-hidden bg-[#1D2130] border border-white/8 rounded-lg shadow-[0_25px_50px_-12px_#00000040]">
+                  {/* WINDOW HEADER */}
+                  <div className="flex items-center w-full h-8 gap-x-1.5 px-3 border-b border-white/8">
+                    <span className="w-2 h-2 bg-[#FF5F57] rounded-full" />
+                    <span className="w-2 h-2 bg-[#FEBC2E] rounded-full" />
+                    <span className="w-2 h-2 bg-[#28C840] rounded-full" />
+                  </div>
+
+                  <img
+                    src={jovlenDashboard}
+                    alt="Jövlen Organizer Dashboard and Event Statistics"
+                    className="block w-full h-auto"
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between w-full h-fit gap-x-3 gap-y-1 px-1">
+                  <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-[16.5px] tracking-[-0.16px]">
+                    <span className="text-[#E85D2A]">•</span> ORGANIZER
+                    DASHBOARD &amp; EVENT STATISTICS
+                  </span>
+
+                  <span className="font-jetbrains font-normal text-xs text-[#E85D2A] leading-[16.5px]">
+                    PRIMARY VIEW
+                  </span>
+                </div>
+              </div>
+
+              {/* REFERRAL & POINTS */}
+              <div className="flex flex-col items-start w-full h-fit gap-y-3">
+                <div className="flex flex-col items-start w-full h-fit overflow-hidden bg-[#1D2130] border border-white/8 rounded-lg shadow-[0_25px_50px_-12px_#00000040]">
+                  {/* WINDOW HEADER */}
+                  <div className="flex items-center w-full h-8 gap-x-1.5 px-3 border-b border-white/8">
+                    <span className="w-2 h-2 bg-[#FF5F57] rounded-full" />
+                    <span className="w-2 h-2 bg-[#FEBC2E] rounded-full" />
+                    <span className="w-2 h-2 bg-[#28C840] rounded-full" />
+                  </div>
+
+                  <img
+                    src={jovlenReferral}
+                    alt="Jövlen Customer Referral and Points System"
+                    className="block w-full h-auto"
+                  />
+                </div>
+
+                <div className="flex flex-wrap items-center justify-between w-full h-fit gap-x-3 gap-y-1 px-1">
+                  <span className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-[16.5px] tracking-[-0.16px]">
+                    <span className="text-[#E85D2A]">•</span> CUSTOMER REFERRAL
+                    &amp; POINTS SYSTEM
+                  </span>
+
+                  <span className="font-jetbrains font-normal text-xs text-[#E85D2A] leading-[16.5px]">
+                    FEATURE 2 REWARDS
+                  </span>
                 </div>
               </div>
             </div>

@@ -1,22 +1,22 @@
-
 const specifications = [
   {
     label: 'SPEC. 01 - FRONT-END',
-    title: 'HTML, CSS, JavaScript, TypeScript, React, Tailwind CSS',
+    title:
+      'HTML, CSS, JavaScript, TypeScript, React, Next.js, Tailwind CSS',
     description:
-      'Semantic HTML5, responsive CSS layout paradigms, modern ESNext, component architecture, state hierarchies, fluid typography, tokenized design systems, and WCAG accessibility standards.',
+      'Semantic HTML5, responsive web design, modern JavaScript, component-based architecture, state management, form validation, and REST API integration.',
   },
   {
     label: 'SPEC. 02 - BACK-END',
-    title: 'Node.js, Express, REST API, Database Fundamentals',
+    title: 'Node.js, Express.js, PostgreSQL, Prisma ORM, REST APIs',
     description:
-      'RESTful endpoint routing, middleware pipelines, error handling, SQL and NoSQL schema modeling, authentication workflows, and performant data persistence layers.',
+      'RESTful API development, middleware, authentication and authorization, relational database modeling, CRUD operations, and data management using Prisma ORM.',
   },
   {
-    label: 'SPEC. 03 - DEVOPS & TOOLS',
-    title: 'Git, GitHub, Postman, VS Code, Figma',
+    label: 'SPEC. 03 - DEVELOPMENT TOOLS & PLATFORMS',
+    title: 'Git, GitHub, Postman, VS Code, Figma, Supabase',
     description:
-      'Version control with branch protection, API contract testing and profiling with Postman, development tooling and linting in VS Code, and pixel-accurate design-to-code implementation from Figma.',
+      'Version control with Git and GitHub, API testing with Postman, development workflows in VS Code, UI implementation from Figma, and cloud-hosted PostgreSQL database management with Supabase.',
   },
 ];
 
