@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+model ContactMessage {
+  id         String   @id @default(uuid())
+  name       String
+  email      String
+  message    String   @db.Text
+  isVerified Boolean  @default(false)
+  createdAt  DateTime @default(now())
+
+  @@map("contact_messages")
+}
+
+model ContactVerification {
+  id         String    @id @default(uuid())
+  name       String
+  email      String
+  message    String    @db.Text
+  otpHash    String
+  expiresAt  DateTime
+  attempts   Int       @default(0)
+  verifiedAt DateTime?
+  createdAt  DateTime  @default(now())
+
+  @@map("contact_verifications")
+}
