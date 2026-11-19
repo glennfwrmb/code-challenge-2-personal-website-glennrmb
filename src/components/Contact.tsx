@@ -1,4 +1,4 @@
-
+import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
   contactSchema,
@@ -8,30 +8,89 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import axios from 'axios';
 import { toast } from 'react-toastify';
 
+const OTP_DURATION = 5 * 60;
+const RESEND_COOLDOWN = 60;
+
 export default function Contact() {
+  const [verificationId, setVerificationId] = useState<string | null>(null);
+  const [otp, setOtp] = useState('');
+  const [isVerifying, setIsVerifying] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+
+  const [otpExpiresAt, setOtpExpiresAt] = useState<number | null>(null);
+  const [resendAvailableAt, setResendAvailableAt] = useState<number | null>(
+    null,
+  );
+  const [now, setNow] = useState(() => Date.now());
+
   const {
     register,
     handleSubmit,
+    getValues,
     reset,
     formState: { errors, isSubmitting },
   } = useForm<contactRequest>({
     resolver: zodResolver(contactSchema),
   });
 
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  // Update countdown every second
+  useEffect(() => {
+    if (!verificationId) return;
+
+    const interval = window.setInterval(() => {
+      setNow(Date.now());
+    }, 1000);
+
+    return () => window.clearInterval(interval);
+  }, [verificationId]);
+
+  const otpSecondsLeft = otpExpiresAt
+    ? Math.max(0, Math.ceil((otpExpiresAt - now) / 1000))
+    : 0;
+
+  const resendSecondsLeft = resendAvailableAt
+    ? Math.max(0, Math.ceil((resendAvailableAt - now) / 1000))
+    : 0;
+
+  const isOtpExpired = verificationId !== null && otpSecondsLeft === 0;
+
+  const formatTime = (seconds: number) => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+
+    return `${String(minutes).padStart(2, '0')}:${String(
+      remainingSeconds,
+    ).padStart(2, '0')}`;
+  };
+
+  const startOtpTimer = (newVerificationId: string) => {
+    const currentTime = Date.now();
+
+    setVerificationId(newVerificationId);
+    setOtp('');
+    setNow(currentTime);
+    setOtpExpiresAt(currentTime + OTP_DURATION * 1000);
+    setResendAvailableAt(currentTime + RESEND_COOLDOWN * 1000);
+  };
+
+  // STEP 1: Request OTP
   const handleContact = async (data: contactRequest) => {
+    if (verificationId) return;
+
     try {
-      const res = await axios.post('/api/send-verification', {
+      const res = await axios.post(`${API_URL}/contacts/request-otp`, {
         name: data.name,
         email: data.email,
-        brief: data.brief,
+        message: data.brief,
       });
 
-      toast.success(
-        res.data?.message ||
-          'Verification email sent. Please check your inbox.',
-      );
+      startOtpTimer(res.data.data.verificationId);
 
-      reset();
+      toast.success(
+        res.data.message || 'Verification code sent. Please check your inbox.',
+      );
     } catch (error) {
       console.error('Contact form error:', error);
 
@@ -42,9 +101,111 @@ export default function Contact() {
       toast.error(
         typeof message === 'string'
           ? message
-          : 'Could not send the verification email. Please try again.',
+          : 'Could not send the verification code. Please try again.',
       );
     }
+  };
+
+  // STEP 2: Verify OTP
+  const handleVerifyOtp = async () => {
+    if (!verificationId || isVerifying || isResending) return;
+
+    if (isOtpExpired) {
+      toast.error('OTP has expired. Please request a new code.');
+      return;
+    }
+
+    if (!/^\d{6}$/.test(otp)) {
+      toast.error('Please enter a valid 6-digit verification code.');
+      return;
+    }
+
+    try {
+      setIsVerifying(true);
+
+      const res = await axios.post(`${API_URL}/contacts/verify-otp`, {
+        verificationId,
+        otp,
+      });
+
+      toast.success(
+        res.data.message || 'Your message has been sent successfully.',
+      );
+
+      setVerificationId(null);
+      setOtp('');
+      setOtpExpiresAt(null);
+      setResendAvailableAt(null);
+      reset();
+    } catch (error) {
+      console.error('OTP verification error:', error);
+
+      const message = axios.isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+
+      toast.error(
+        typeof message === 'string'
+          ? message
+          : 'Verification failed. Please try again.',
+      );
+
+      if (message === 'OTP has expired') {
+        setOtpExpiresAt(Date.now());
+      }
+    } finally {
+      setIsVerifying(false);
+    }
+  };
+
+  // STEP 3: Resend OTP
+  const handleResendOtp = async () => {
+    if (!verificationId || isResending || isVerifying) return;
+
+    if (resendSecondsLeft > 0) {
+      toast.error(`Please wait ${resendSecondsLeft} seconds before resending.`);
+      return;
+    }
+
+    const data = getValues();
+
+    try {
+      setIsResending(true);
+
+      const res = await axios.post(`${API_URL}/contacts/request-otp`, {
+        name: data.name,
+        email: data.email,
+        message: data.brief,
+      });
+
+      startOtpTimer(res.data.data.verificationId);
+
+      toast.success('A new verification code has been sent to your email.');
+    } catch (error) {
+      console.error('Resend OTP error:', error);
+
+      const message = axios.isAxiosError(error)
+        ? error.response?.data?.message
+        : undefined;
+
+      toast.error(
+        typeof message === 'string'
+          ? message
+          : 'Could not resend the verification code. Please try again.',
+      );
+    } finally {
+      setIsResending(false);
+    }
+  };
+
+  // STEP 4: Cancel OTP Verification
+  const handleCancelVerification = () => {
+    if (isVerifying || isResending) return;
+
+    setVerificationId(null);
+    setOtp('');
+    setOtpExpiresAt(null);
+    setResendAvailableAt(null);
   };
 
   return (
@@ -84,13 +245,12 @@ export default function Contact() {
                         autoComplete="name"
                         className="w-full h-fit bg-transparent outline-none font-space font-normal text-sm text-[#A5A7B0] leading-[normal] tracking-[-0.16px] placeholder:text-[#A5A7B0]"
                         {...register('name')}
+                        disabled={verificationId !== null}
                       />
                     </div>
                   </div>
 
-                  <p className="text-sm text-red-600">
-                    {errors.name?.message}
-                  </p>
+                  <p className="text-sm text-red-600">{errors.name?.message}</p>
                 </div>
 
                 {/* EMAIL */}
@@ -113,6 +273,7 @@ export default function Contact() {
                         autoComplete="email"
                         className="w-full h-fit bg-transparent outline-none font-space font-normal text-sm text-[#A5A7B0] leading-[normal] tracking-[-0.16px] placeholder:text-[#A5A7B0]"
                         {...register('email')}
+                        disabled={verificationId !== null}
                       />
                     </div>
                   </div>
@@ -141,20 +302,103 @@ export default function Contact() {
                       placeholder="Tell me about your project, idea, or opportunity..."
                       className="w-full h-fit resize-none bg-transparent outline-none font-space font-normal text-sm text-[#A5A7B0] leading-5 tracking-[-0.16px] placeholder:text-[#A5A7B0]"
                       {...register('brief')}
+                      disabled={verificationId !== null}
                     />
                   </div>
                 </div>
 
-                <p className="text-sm text-red-600">
-                  {errors.brief?.message}
-                </p>
+                <p className="text-sm text-red-600">{errors.brief?.message}</p>
               </div>
+
+              {/* OTP VERIFICATION */}
+              {verificationId && (
+                <div className="flex flex-col items-start w-full h-fit gap-y-3">
+                  <label
+                    htmlFor="otp"
+                    className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-4 tracking-[1.2px]"
+                  >
+                    EMAIL VERIFICATION CODE *
+                  </label>
+
+                  <input
+                    id="otp"
+                    type="text"
+                    inputMode="numeric"
+                    autoComplete="one-time-code"
+                    maxLength={6}
+                    value={otp}
+                    onChange={(e) => setOtp(e.target.value.replace(/\D/g, ''))}
+                    placeholder="Enter 6-digit code"
+                    disabled={isOtpExpired || isVerifying || isResending}
+                    className="w-full h-fit px-4 py-3.75 bg-[#171A24] border border-white/8 outline-none font-space font-normal text-sm text-[#F5F3EE] placeholder:text-[#A5A7B0] disabled:opacity-60 disabled:cursor-not-allowed"
+                  />
+
+                  {/* OTP EXPIRATION */}
+                  {isOtpExpired ? (
+                    <p className="font-jetbrains font-normal text-xs text-red-400 leading-5">
+                      Your verification code has expired. Please request a new
+                      code.
+                    </p>
+                  ) : (
+                    <p className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-5">
+                      Check your email for the verification code. Expires in{' '}
+                      <span className="text-[#F5F3EE]">
+                        {formatTime(otpSecondsLeft)}
+                      </span>
+                      .
+                    </p>
+                  )}
+
+                  {/* VERIFY BUTTON */}
+                  <button
+                    type="button"
+                    onClick={handleVerifyOtp}
+                    disabled={isVerifying || isResending || isOtpExpired}
+                    className="btn flex items-center justify-center w-fit h-fit gap-x-3 px-8 py-4 bg-[#E85D2A] shadow-[0_10px_15px_-3px_#E85D2A33,0_4px_6px_-4px_#E85D2A33] disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    <span className="font-jetbrains font-semibold text-xs text-white leading-4 tracking-[1.2px]">
+                      {isVerifying ? 'VERIFYING...' : 'VERIFY & SEND MESSAGE'}
+                    </span>
+                  </button>
+
+                  {/* RESEND OTP */}
+                  <button
+                    type="button"
+                    onClick={handleResendOtp}
+                    disabled={
+                      isResending || isVerifying || resendSecondsLeft > 0
+                    }
+                    className="font-jetbrains font-normal text-xs text-[#E85D2A] leading-4 hover:text-[#F5F3EE] disabled:text-[#A5A7B0] disabled:cursor-not-allowed"
+                  >
+                    {isResending
+                      ? 'RESENDING CODE...'
+                      : resendSecondsLeft > 0
+                        ? `RESEND CODE IN ${formatTime(resendSecondsLeft)}`
+                        : 'RESEND VERIFICATION CODE'}
+                  </button>
+
+                  {/* CANCEL OTP VERIFICATION */}
+                  <button
+                    type="button"
+                    onClick={handleCancelVerification}
+                    disabled={isVerifying || isResending}
+                    className="font-jetbrains font-normal text-xs text-[#A5A7B0] leading-4 hover:text-white disabled:opacity-60 disabled:cursor-not-allowed"
+                  >
+                    CHANGE EMAIL / CANCEL VERIFICATION
+                  </button>
+                </div>
+              )}
 
               {/* BUTTON + DIRECT RESPONSE */}
               <div className="flex flex-col items-start w-full h-fit gap-y-4 pt-2 sm:flex-row sm:items-center sm:justify-between sm:gap-x-4">
                 <button
                   type="submit"
-                  disabled={isSubmitting}
+                  disabled={
+                    isSubmitting ||
+                    verificationId !== null ||
+                    isResending ||
+                    isVerifying
+                  }
                   className="btn flex items-center justify-center w-fit h-fit gap-x-3 px-8 py-4 bg-[#E85D2A] shadow-[0_10px_15px_-3px_#E85D2A33,0_4px_6px_-4px_#E85D2A33] disabled:opacity-60 disabled:cursor-not-allowed"
                 >
                   <div className="flex flex-col items-center justify-start w-fit h-fit">
