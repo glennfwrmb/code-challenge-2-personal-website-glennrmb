@@ -1,4 +1,3 @@
-
 import { ZodType } from 'zod';
 import { AppError } from '../errors/app.error';
 
@@ -10,7 +9,7 @@ export function validate<T>(schema: ZodType<T>, data: unknown): T {
       .map((issue) => issue.message)
       .join(', ');
 
-    throw new AppError(details, 422);
+    throw new AppError(422, details);
   }
 
   return result.data;

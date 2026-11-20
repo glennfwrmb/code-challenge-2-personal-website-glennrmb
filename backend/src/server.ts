@@ -3,11 +3,8 @@ import app from "./application/app";
 
 const PORT: number = Number(process.env.PORT) || 8000;
 
-// Start server only in development
-if (process.env.NODE_ENV === "development") {
-  app.listen(PORT, () => {
-    console.log(`Application Running On Port ${PORT}`);
-  });
-}
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Application Running On Port ${PORT}`);
+});
 
 export default app;

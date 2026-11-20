@@ -1,3 +1,4 @@
+import { axiosInstance } from '../lib/axios-instance.lib';
 import { useEffect, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import {
@@ -32,8 +33,6 @@ export default function Contact() {
   } = useForm<contactRequest>({
     resolver: zodResolver(contactSchema),
   });
-
-  const API_URL = import.meta.env.VITE_API_URL;
 
   // Update countdown every second
   useEffect(() => {
@@ -80,7 +79,7 @@ export default function Contact() {
     if (verificationId) return;
 
     try {
-      const res = await axios.post(`${API_URL}/contacts/request-otp`, {
+      const res = await axiosInstance.post('/contacts/request-otp', {
         name: data.name,
         email: data.email,
         message: data.brief,
@@ -123,7 +122,7 @@ export default function Contact() {
     try {
       setIsVerifying(true);
 
-      const res = await axios.post(`${API_URL}/contacts/verify-otp`, {
+      const res = await axiosInstance.post('/contacts/verify-otp', {
         verificationId,
         otp,
       });
@@ -172,7 +171,7 @@ export default function Contact() {
     try {
       setIsResending(true);
 
-      const res = await axios.post(`${API_URL}/contacts/request-otp`, {
+      const res = await axiosInstance.post('/contacts/request-otp', {
         name: data.name,
         email: data.email,
         message: data.brief,

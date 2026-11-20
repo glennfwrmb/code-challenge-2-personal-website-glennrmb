@@ -1,4 +1,3 @@
-
 import { AppError } from '../../errors/app.error';
 import { createHmac, randomInt, timingSafeEqual } from 'crypto';
 import { prisma } from '../../lib/prisma';
@@ -22,45 +21,59 @@ export class ContactsService {
     return createHmac('sha256', secret).update(otp).digest('hex');
   }
 
+  private compareOtp(otp: string, storedHash: string) {
+    const submitted = Buffer.from(this.hashOtp(otp), 'hex');
+    const stored = Buffer.from(storedHash, 'hex');
+
+    return (
+      submitted.length === stored.length &&
+      timingSafeEqual(submitted, stored)
+    );
+  }
+
   async requestOtp(data: ContactData) {
-    const { name, email, message } = data;
+    const { name, message } = data;
+    const email = data.email.trim().toLowerCase();
 
-    // Limit OTP requests to once every 60 seconds per email
-    const recentRequest = await prisma.contactVerification.findFirst({
-      where: {
-        email,
-        createdAt: {
-          gt: new Date(Date.now() - 60 * 1000),
-        },
-      },
-    });
-
-    if (recentRequest) {
-      throw new AppError(
-        'Please wait 60 seconds before requesting another OTP',
-        429,
-      );
-    }
-
-    // Generate a secure 6-digit OTP
     const otp = randomInt(100000, 1000000).toString();
-
-    // OTP expires after 5 minutes
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    // Create new OTP without invalidating the previous OTP yet
-    const verification = await prisma.contactVerification.create({
-      data: {
-        name,
-        email,
-        message,
-        otpHash: this.hashOtp(otp),
-        expiresAt,
-      },
+    // Lock requests for the same email
+    const verification = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`
+        SELECT pg_advisory_xact_lock(
+          hashtextextended(${`contact:email:${email}`}, 0)
+        )
+      `;
+
+      const recentRequest = await tx.contactVerification.findFirst({
+        where: {
+          email,
+          createdAt: {
+            gt: new Date(Date.now() - 60 * 1000),
+          },
+        },
+      });
+
+      if (recentRequest) {
+        throw new AppError(
+          429,
+          'Please wait 60 seconds before requesting another OTP',
+        );
+      }
+
+      return tx.contactVerification.create({
+        data: {
+          name,
+          email,
+          message,
+          otpHash: this.hashOtp(otp),
+          expiresAt,
+        },
+      });
     });
 
     try {
-      // Send the new OTP to the visitor
       await transporter.sendMail({
         from: process.env.NODEMAILER_EMAIL,
         to: email,
@@ -68,17 +81,27 @@ export class ContactsService {
         text: `Your verification code is ${otp}. This code expires in 5 minutes.`,
       });
     } catch (error) {
-      // Delete new OTP if email delivery fails
-      await prisma.contactVerification.delete({
-        where: {
-          id: verification.id,
-        },
-      });
+      // Remove the new verification if sending fails
+      try {
+        await prisma.contactVerification.deleteMany({
+          where: {
+            id: verification.id,
+            verifiedAt: null,
+          },
+        });
+      } catch (cleanupError) {
+        console.error('Failed to clean up OTP:', cleanupError);
+      }
 
-      throw error;
+      console.error('Failed to send verification email:', error);
+
+      throw new AppError(
+        503,
+        'Unable to send verification email. Please try again later.',
+      );
     }
 
-    // Invalidate previous OTPs after email is sent successfully
+    // Invalidate older, unused OTPs after successful sending
     await prisma.contactVerification.updateMany({
       where: {
         email,
@@ -101,62 +124,76 @@ export class ContactsService {
   async verifyOtp(data: VerifyOtpData) {
     const { verificationId, otp } = data;
 
-    const verification = await prisma.contactVerification.findUnique({
-      where: {
-        id: verificationId,
-      },
-    });
+    // Serialize verification attempts for this verification ID
+    const result = await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`
+        SELECT pg_advisory_xact_lock(
+          hashtextextended(${`contact:verify:${verificationId}`}, 0)
+        )
+      `;
 
-    if (!verification) {
-      throw new AppError('Verification not found', 404);
-    }
-
-    if (verification.verifiedAt) {
-      throw new AppError('OTP has already been used', 400);
-    }
-
-    if (verification.expiresAt <= new Date()) {
-      throw new AppError('OTP has expired', 400);
-    }
-
-    if (verification.attempts >= 5) {
-      throw new AppError(
-        'Maximum verification attempts exceeded',
-        429,
-      );
-    }
-
-    const submittedHash = Buffer.from(this.hashOtp(otp), 'hex');
-    const storedHash = Buffer.from(verification.otpHash, 'hex');
-
-    const isValid =
-      submittedHash.length === storedHash.length &&
-      timingSafeEqual(submittedHash, storedHash);
-
-    if (!isValid) {
-      await prisma.contactVerification.updateMany({
+      const verification = await tx.contactVerification.findUnique({
         where: {
           id: verificationId,
-          verifiedAt: null,
-          expiresAt: {
-            gt: new Date(),
-          },
-          attempts: {
-            lt: 5,
-          },
-        },
-        data: {
-          attempts: {
-            increment: 1,
-          },
         },
       });
 
-      throw new AppError('Invalid OTP', 400);
-    }
+      if (!verification) {
+        return {
+          success: false as const,
+          status: 404,
+          message: 'Verification not found',
+        };
+      }
 
-    // Save message and consume OTP atomically
-    const contact = await prisma.$transaction(async (tx) => {
+      if (verification.verifiedAt) {
+        return {
+          success: false as const,
+          status: 400,
+          message: 'OTP has already been used',
+        };
+      }
+
+      if (verification.expiresAt <= new Date()) {
+        return {
+          success: false as const,
+          status: 400,
+          message: 'OTP has expired',
+        };
+      }
+
+      if (verification.attempts >= 5) {
+        return {
+          success: false as const,
+          status: 429,
+          message: 'Maximum verification attempts exceeded',
+        };
+      }
+
+      const isValid = this.compareOtp(
+        otp,
+        verification.otpHash,
+      );
+
+      if (!isValid) {
+        await tx.contactVerification.update({
+          where: {
+            id: verificationId,
+          },
+          data: {
+            attempts: {
+              increment: 1,
+            },
+          },
+        });
+
+        return {
+          success: false as const,
+          status: 400,
+          message: 'Invalid OTP',
+        };
+      }
+
       const updated = await tx.contactVerification.updateMany({
         where: {
           id: verificationId,
@@ -174,10 +211,14 @@ export class ContactsService {
       });
 
       if (updated.count !== 1) {
-        throw new AppError('OTP is no longer valid', 400);
+        return {
+          success: false as const,
+          status: 400,
+          message: 'OTP is no longer valid',
+        };
       }
 
-      return tx.contactMessage.create({
+      const contact = await tx.contactMessage.create({
         data: {
           name: verification.name,
           email: verification.email,
@@ -185,9 +226,22 @@ export class ContactsService {
           isVerified: true,
         },
       });
+
+      return {
+        success: true as const,
+        contact,
+        verification,
+      };
     });
 
-    // Notify portfolio owner without failing the saved message
+    // Throw outside the transaction so failed attempts remain saved
+    if (!result.success) {
+      throw new AppError(result.status, result.message);
+    }
+
+    const { contact, verification } = result;
+
+    // Notify portfolio owner without rolling back the saved message
     try {
       await transporter.sendMail({
         from: process.env.NODEMAILER_EMAIL,
