@@ -1,0 +1,12 @@
+{
+  "name": "glenn-personal-website",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "intro-react"
+  ],
+  "scripts": {
+    "build": "npm run prisma:generate && npm run build --workspace=backend && npm run build --workspace=intro-react",
+    "prisma:generate": "npm exec --workspace=backend -- prisma generate"
+  }
+}

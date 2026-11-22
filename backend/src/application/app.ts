@@ -27,19 +27,24 @@ app.get(`${API_PREFIX}/health`, (req, res) => {
 // Contact Form Routes
 app.use(`${API_PREFIX}/contacts`, ContactsRoute);
 
-// Serve React Frontend
-const frontendPath = path.resolve(process.cwd(), '../intro-react/dist');
+// Serve React Frontend only outside Vercel
+if (!process.env.VERCEL) {
+  const frontendPath = path.resolve(
+    __dirname,
+    '../../../intro-react/dist'
+  );
 
-app.use(express.static(frontendPath));
+  app.use(express.static(frontendPath));
 
-// React SPA fallback
-app.get('/{*path}', (req, res, next) => {
-  if (req.path.startsWith('/api/') || path.extname(req.path)) {
-    return next();
-  }
+  // React SPA fallback
+  app.get('/{*path}', (req, res, next) => {
+    if (req.path.startsWith('/api/') || path.extname(req.path)) {
+      return next();
+    }
 
-  res.sendFile(path.join(frontendPath, 'index.html'));
-});
+    res.sendFile(path.join(frontendPath, 'index.html'));
+  });
+}
 
 // Global Error Handling
 app.use(errorMiddleware);
