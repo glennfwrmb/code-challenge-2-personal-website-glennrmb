@@ -26,8 +26,7 @@ export class ContactsService {
     const stored = Buffer.from(storedHash, 'hex');
 
     return (
-      submitted.length === stored.length &&
-      timingSafeEqual(submitted, stored)
+      submitted.length === stored.length && timingSafeEqual(submitted, stored)
     );
   }
 
@@ -38,14 +37,15 @@ export class ContactsService {
     const otp = randomInt(100000, 1000000).toString();
     const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
 
-    // Lock requests for the same email
+    // Serialize OTP requests for the same email
     const verification = await prisma.$transaction(async (tx) => {
       await tx.$queryRaw`
         SELECT pg_advisory_xact_lock(
           hashtextextended(${`contact:email:${email}`}, 0)
-        )
+        ) IS NULL AS locked
       `;
 
+      // Check the 60-second cooldown
       const recentRequest = await tx.contactVerification.findFirst({
         where: {
           email,
@@ -62,6 +62,18 @@ export class ContactsService {
         );
       }
 
+      // Invalidate previous unused OTPs
+      await tx.contactVerification.updateMany({
+        where: {
+          email,
+          verifiedAt: null,
+        },
+        data: {
+          expiresAt: new Date(),
+        },
+      });
+
+      // Create new verification
       return tx.contactVerification.create({
         data: {
           name,
@@ -81,7 +93,6 @@ export class ContactsService {
         text: `Your verification code is ${otp}. This code expires in 5 minutes.`,
       });
     } catch (error) {
-      // Remove the new verification if sending fails
       try {
         await prisma.contactVerification.deleteMany({
           where: {
@@ -101,20 +112,6 @@ export class ContactsService {
       );
     }
 
-    // Invalidate older, unused OTPs after successful sending
-    await prisma.contactVerification.updateMany({
-      where: {
-        email,
-        id: {
-          not: verification.id,
-        },
-        verifiedAt: null,
-      },
-      data: {
-        expiresAt: new Date(),
-      },
-    });
-
     return {
       verificationId: verification.id,
       message: 'Verification code sent successfully',
@@ -124,14 +121,32 @@ export class ContactsService {
   async verifyOtp(data: VerifyOtpData) {
     const { verificationId, otp } = data;
 
-    // Serialize verification attempts for this verification ID
+    // Read email before acquiring the shared lock
+    const initialVerification = await prisma.contactVerification.findUnique({
+      where: {
+        id: verificationId,
+      },
+      select: {
+        email: true,
+      },
+    });
+
+    if (!initialVerification) {
+      throw new AppError(404, 'Verification not found');
+    }
+
+    // Use the same email lock as requestOtp()
     const result = await prisma.$transaction(async (tx) => {
       await tx.$queryRaw`
         SELECT pg_advisory_xact_lock(
-          hashtextextended(${`contact:verify:${verificationId}`}, 0)
-        )
+          hashtextextended(
+            ${`contact:email:${initialVerification.email}`},
+            0
+          )
+        ) IS NULL AS locked
       `;
 
+      // Read current verification after acquiring the lock
       const verification = await tx.contactVerification.findUnique({
         where: {
           id: verificationId,
@@ -170,10 +185,8 @@ export class ContactsService {
         };
       }
 
-      const isValid = this.compareOtp(
-        otp,
-        verification.otpHash,
-      );
+      // Compare OTP securely
+      const isValid = this.compareOtp(otp, verification.otpHash);
 
       if (!isValid) {
         await tx.contactVerification.update({
@@ -194,6 +207,7 @@ export class ContactsService {
         };
       }
 
+      // Consume OTP only if still valid
       const updated = await tx.contactVerification.updateMany({
         where: {
           id: verificationId,
@@ -218,6 +232,7 @@ export class ContactsService {
         };
       }
 
+      // Save contact message in the same transaction
       const contact = await tx.contactMessage.create({
         data: {
           name: verification.name,
@@ -234,14 +249,14 @@ export class ContactsService {
       };
     });
 
-    // Throw outside the transaction so failed attempts remain saved
+    // Throw outside transaction to preserve failed attempts
     if (!result.success) {
       throw new AppError(result.status, result.message);
     }
 
     const { contact, verification } = result;
 
-    // Notify portfolio owner without rolling back the saved message
+    // Notify portfolio owner
     try {
       await transporter.sendMail({
         from: process.env.NODEMAILER_EMAIL,
