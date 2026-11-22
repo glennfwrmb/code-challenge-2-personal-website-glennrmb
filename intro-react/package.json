@@ -44,6 +44,7 @@
   },
   "optionalDependencies": {
     "@rolldown/binding-linux-x64-gnu": "^1.2.11",
+    "@tailwindcss/oxide-linux-x64-gnu": "npm:null@*",
     "lightningcss-linux-x64-gnu": "^1.33.0"
   }
 }
